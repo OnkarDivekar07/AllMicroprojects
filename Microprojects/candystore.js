@@ -15,7 +15,6 @@ form.addEventListener('submit', addcandy)
 
 
 
-
 function addcandy(e) {
     //this will prevent refreshing of page
     e.preventDefault();
@@ -33,7 +32,7 @@ function addcandy(e) {
         Quntity
     }
     //posting data to crudcrud through http axios liabrary
-    axios.post("https://crudcrud.com/api/7e8ee1dedf2b49bb8e465a8cf269e14e/candydata", obj)
+    axios.post("https://crudcrud.com/api/1d614026a3c748278004568e44f1672c/candydata", obj)
         .then((response) => {
             addcart(response.data);
             console.log(response.data);
@@ -47,8 +46,12 @@ function addcandy(e) {
 //creating all buttons in this function and updating  remaning quntity on front by inner html
 function addcart(responsedata) {
     const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.innerText = `Quntity: ${responsedata.Quntity}`;
+
     //this create actual node which get displayed after clicking on submit button
     li.appendChild(document.createTextNode(`Itemname:${responsedata.ItemName} Description:${responsedata.Description} price:${responsedata.price} Quntity${responsedata.Quntity}`))
+    li.appendChild(span);
     const buy1 = document.createElement('input');
     buy1.type = "button";
     buy1.className = " btn btn-secondary"
@@ -58,7 +61,7 @@ function addcart(responsedata) {
         responsedata.Quntity -= 1
         updateQuantity(responsedata)
         //this updating above created text node according to new quntity
-        li.innerText = `Itemname${responsedata.ItemName} Description${responsedata.Description} price${responsedata.price} Quntity${responsedata.Quntity}`
+        span.innerText = `Quntity: ${responsedata.Quntity}`;
     }
     const buy2 = document.createElement('input');
     buy2.type = "button";
@@ -68,7 +71,8 @@ function addcart(responsedata) {
     buy2.onclick = () => {
         responsedata.Quntity -= 2
         updateQuantity(responsedata)
-        li.innerText = `Itemname${responsedata.ItemName} Description${responsedata.Description} price${responsedata.price} Quntity${responsedata.Quntity}`
+        span.innerText = `Quntity: ${responsedata.Quntity}`;
+
 
     }
     const buy3 = document.createElement('input');
@@ -79,7 +83,7 @@ function addcart(responsedata) {
     buy3.onclick = () => {
         responsedata.Quntity -= 3
         updateQuantity(responsedata)
-        li.innerText = `Itemname${responsedata.ItemName} Description${responsedata.Description} price${responsedata.price} Quntity${responsedata.Quntity}`
+        span.innerText = `Quntity: ${responsedata.Quntity}`;
 
     }
     //to keep buttons on write side
@@ -97,7 +101,7 @@ function updateQuantity(responsedata) {
     const id = responsedata._id
     console.log(id);
     //we can directly put obj in here because it contains old id  which  can create issue
-    axios.put(`https://crudcrud.com/api/7e8ee1dedf2b49bb8e465a8cf269e14e/candydata/${id}`, {
+    axios.put(`https://crudcrud.com/api/1d614026a3c748278004568e44f1672c/candydata/${id}`, {
         ItemName: responsedata.ItemName, Description: responsedata.Description, price: responsedata.price, Quntity: responsedata.Quntity
     })
         .then((response) => {
@@ -111,7 +115,7 @@ function updateQuantity(responsedata) {
 //this function give us all the input items after we refresh the page
 window.addEventListener('DOMContentLoaded', () => {
 
-    axios.get("https://crudcrud.com/api/7e8ee1dedf2b49bb8e465a8cf269e14e/candydata")
+    axios.get("https://crudcrud.com/api/1d614026a3c748278004568e44f1672c/candydata")
         .then((response) => {
             for (let i = 0; i < response.data.length; i++) {
                 addcart(response.data[i]);
