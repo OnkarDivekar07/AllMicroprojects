@@ -1,8 +1,17 @@
-const http = require('http');
-const routes=require('./routes');
-//important note we cannot edit  route  externally means route.something is not possible
-const fs = require('fs');
-const server = http.createServer(routes);
+const express = require('express')
+const app = express();
+app.use((req, res, next) => {
+    console.log('this is middleware')
+
+    next();//allows to continue request to the next middleware
 
 
-server.listen(4000);
+})
+
+app.use((req, res, next) => {
+    console.log('this is another middleware')
+
+    res.send('<h1>Hello from express js</h1>')
+
+})
+app.listen(4000);
