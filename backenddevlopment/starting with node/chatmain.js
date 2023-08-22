@@ -47,5 +47,4 @@ chatapp.use("/", (req, res, next) => {
 
     
 })
-
 chatapp.listen(4000);
