@@ -1,0 +1,22 @@
+
+<!--this html document is created for chat application -->
+
+<!DOCTYPE html>
+<html>
+
+<body>
+    <form action="/user" method="POST" id="form"><input type="text" name="user" placeholder="username" /><br><button
+            type="submit">Login</button></form>
+    <script>
+    const form = document.getElementById('form'); 
+    
+     form.addEventListener('submit', store);
+        function store(e) {
+            let userid = e.target.chat.value;
+            console.log(userid);
+            localStorage.setItem('userid', userid);
+        }
+    </script>
+</body>
+
+</html>
