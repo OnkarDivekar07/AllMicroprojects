@@ -28,7 +28,7 @@ chatapp.use("/", (req, res, next) => {
     if(req.body.chat){
         fs.appendFile('chat.txt',req.body.chat,(error)=>{
       if(error){
-        console.log("error")
+        console.log(error)
       }
       else{
         console.log('succesfully created');
@@ -36,7 +36,14 @@ chatapp.use("/", (req, res, next) => {
 })
     }
 
-            res.send(`<html><body><form  action="/chat" method="Post"><input type="text" name="chat" placeholder="write here" /><br><button type="submit">send</button></form></body></html>`)
+    fs.readFile('chat.txt','utf-8',(error,chats)=>{
+        if(error){
+            console.log(error)
+        }
+        else{
+            res.send(`<html><body><form  action="/chat" method="Post"><p>${chats}</p><input type="text" name="chat" placeholder="write here" /><br><button type="submit">send</button></form></body></html>`)  
+        }
+    })
 
     
 })
