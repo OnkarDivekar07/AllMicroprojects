@@ -8,9 +8,10 @@ app.use(bodyParser.urlencoded({extended:  false}));
 const adminRoutes=require('./routes/admin.js')
 const shopRoutes=require('./routes/shop.js')
 const routercontactus=require('./routes/contactus.js')
-
+const routerform = require('./routes/formsuccesful.js')
 app.use('/admin',adminRoutes);
 app.use(routercontactus)
+app.use(routerform)
 app.use(shopRoutes);
 app.use(express.static(path.join(__dirname,"public")))
 
