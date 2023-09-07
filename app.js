@@ -16,10 +16,12 @@ const shopRoutes = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-
+const squlize=require('./util/database')
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
 app.use(errorController.get404);
-
+squlize.sync().then((result)=>{
+    console.log(result)
+})
 app.listen(3000);
