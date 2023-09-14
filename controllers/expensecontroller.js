@@ -3,14 +3,15 @@ const expense=require('../model/expensemodel');
 
 exports.getexpense = (req, res) => {
     console.log('expense data send')
-    db.query('SELECT * FROM expense', (err, rows) => {
-        if (err) {
-            console.log(err);
-            res.status(500).json({ error: 'Error fetching data from the database' });
-        } else {
-            res.status(200).json(rows);
-        }
+    expense.fetchAll()
+    
+    .then(([rows,fieldData])=>{
+      res.status(200).json(rows);
     })
+    .catch((err)=>{
+        console.log(err);
+    })
+    
 }
 
 exports.postexpense = (req, res) => {

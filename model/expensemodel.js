@@ -10,7 +10,16 @@ module.exports=class expenses{
 
     }
 
+    static deletebyid(){
+
+    }
+
    static fetchAll(){
-       
+     return  db.execute('SELECT * FROM expense')
+    }
+
+
+    static findbyid(id){
+
     }
 }
