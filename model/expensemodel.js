@@ -1,17 +1,23 @@
 const db = require('../util/database');
 
 
-module.exports=class expenses{
-    constructor(){
-
+module.exports=class Expense{
+     constructor(id, amount, description, catogary){
+         this.id=id
+         this.amount=amount
+         this.description=description
+          this.catogary = catogary
     }
 
-    save(){
-
+     save(){
+       return db.execute('INSERT INTO expense(amount,description,catogary)VALUES(?,?,?)',[
+            this.amount,
+            this.description,
+            this.catogary])
     }
 
-    static deletebyid(){
-
+    static deletebyid(id){
+      return db.execute('DELETE FROM expense where id=?',[id])
     }
 
    static fetchAll(){
@@ -19,7 +25,7 @@ module.exports=class expenses{
     }
 
 
-    static findbyid(id){
-
+    static editbyid(id){
+          
     }
 }

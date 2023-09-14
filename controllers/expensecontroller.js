@@ -16,34 +16,29 @@ exports.getexpense = (req, res) => {
 
 exports.postexpense = (req, res) => {
     console.log('expense added');
-    const expense = req.body;
-    console.log(user)
-    const expensedata = [expense.amount, expense.description, expense.catogary]
-    db.query('insert into  users(amount,description,catogary)values(?)', [expensedata], (err, rows) => {
-        if (err) {
-            console.log(err)
-        }
-        else {
-            const data = {
-                id: rows.insertId,
-                amount: expense.amount,
-                description: expense.description,
-                catogary: expense.catogary
-            };
-            res.status(201).json(data);
-        }
+    const amount=  req.body.amount;
+    const description=req.body.description;
+    const catogary= req.body.catogary;
+    const Expense = new expense(null,amount,description,catogary)
+
+    Expense.save()
+    .then(([rows,fieldData])=>{
+        res.status(201).json(rows);
     })
+    .catch((err)=>{
+        console.log(err);
+    })
+   
 }
 
 
 exports.deleteexpense = (req, res) => {
-    console.log('expense deleted')
-    db.query('delete from expense where id=?', [req.params.id], (err, rows) => {
-        if (err) {
-            console.log(err)
-        }
-        else {
-            res.send(rows);
-        }
-    })
+   console.log('row deleted');
+const expenseid=req.params.id
+   expense.deletebyid(expenseid).then((result)=>{
+    res.send(result);
+   })
+   .catch((err)=>{
+    console.log(err);
+   })
 }
