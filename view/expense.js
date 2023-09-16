@@ -1,47 +1,50 @@
-const form = document.getElementById('form');
-const amount = document.getElementById('amount');
-const description = document.getElementById('description');
-const catogary = document.getElementById('catogary');
-const userTable = document.getElementById('userTable');
-const userTableBody = document.getElementById('userTableBody');
+const form = document.querySelector('#form');
+const button = document.getElementById('button');
 
 
-form.addEventListener('submit', addexpense);
+form.addEventListener('submit', saveExpense);
 
+async function saveExpense(event) {
+    event.preventDefault();
+    const amount = event.target.amount.value;
+    const description = event.target.description.value;
+    const catogary = event.target.catogary.value;
 
-function addexpense(e) {
-    //this prevent refreshing of the page
-    e.preventDefault();
-    //console.log('click');
-    //by using tagname with target we can get values of the inputs
-    const amount1 = e.target.amount.value;
-    const description1 = e.target.discription.value;
-    const catogary1 = e.target.catogary.value;
-    //creating obj of values for localstorage and edit functionality
-    const obj = {
-        amount: amount1,
-        description: description1,
-        catogary: catogary1
+    const expenseData = {
+        amount,
+        description,
+        catogary
+    };
+
+    console.log(expenseData);
+
+    try {
+        console.log(button.dataset.id)
+        if (button.dataset.id) {
+            const expenseId = button.dataset.id;
+            const res = await axios.put(`http://localhost:3000/editexpense/${expenseId}`, expenseData);
+            console.log('expense updated'); // Log a message indicating the expense was updated
+
+            buttons(res.data)
+
+        } else {
+            const res = await axios.post('http://localhost:3000/postexpense', expenseData);
+            console.log('expense added');
+            buttons(res.data);
+        }
+    } catch (error) {
+        console.error(error);
     }
 
-    axios.post('http://localhost:3000/postexpenses', obj)
-
-        .then((response) => {
-            buttons(response.data);
-            console.log(response.data);
-        })
-        .catch((error) => {
-            console.log(error);
-        })
+    button.dataset.id = '';
 }
-
 
 
 
 function buttons(responsedata) {
     const row = document.createElement('tr');
 
-    // Create and append table cells for user data
+
     const amountCell = document.createElement('td');
     amountCell.textContent = responsedata.amount;
     row.appendChild(amountCell);
@@ -51,17 +54,19 @@ function buttons(responsedata) {
     row.appendChild(descriptionCell);
 
     const categoryCell = document.createElement('td');
-    categoryCell.textContent = responsedata.category;
+    categoryCell.textContent = responsedata.catogary;
     row.appendChild(categoryCell);
-
-    // Create and append buttons for actions
+    
     const actionCell = document.createElement('td');
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-secondary';
     editButton.textContent = 'Edit';
     editButton.onclick = () => {
-        // Handle edit action here
-        // You can access the data in responsedata for editing
+        document.getElementById('amount').value = responsedata.amount
+        document.getElementById('catogary').value = responsedata.catogary
+        document.getElementById('description').value = responsedata.description
+        document.getElementById('button').dataset.id = responsedata.id;
+        userTableBody.removeChild(row);
     };
     actionCell.appendChild(editButton);
 
@@ -69,8 +74,15 @@ function buttons(responsedata) {
     deleteButton.className = 'btn btn-secondary';
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = () => {
-        // Handle delete action here
-        // You can access the data in responsedata for deleting
+        const deleteid = responsedata.id;
+        axios.delete(`http://localhost:3000/deleteexpense/${deleteid}`)
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        userTableBody.removeChild(row);
     };
     actionCell.appendChild(deleteButton);
 
@@ -81,3 +93,16 @@ function buttons(responsedata) {
 }
 
 
+
+
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        let res = await axios.get('http://localhost:3000/getexpenses');
+        // console.log(res.data);
+        for (var i = 0; i < res.data.length; i++) {
+            buttons(res.data[i]);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})

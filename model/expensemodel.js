@@ -1,31 +1,26 @@
-const db = require('../util/database');
+const Sequelize=require('sequelize')
+const sequelize=require('../util/database');
 
+const expense=sequelize.define('expense',{
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  amount: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  catogary:{
+    type: Sequelize.STRING,
+    allowNull: false
+  }
 
-module.exports=class Expense{
-     constructor(id, amount, description, catogary){
-         this.id=id
-         this.amount=amount
-         this.description=description
-          this.catogary = catogary
-    }
+})
 
-     save(){
-       return db.execute('INSERT INTO expense(amount,description,catogary)VALUES(?,?,?)',[
-            this.amount,
-            this.description,
-            this.catogary])
-    }
-
-    static deletebyid(id){
-      return db.execute('DELETE FROM expense where id=?',[id])
-    }
-
-   static fetchAll(){
-     return  db.execute('SELECT * FROM expense')
-    }
-
-
-    static editbyid(id){
-          
-    }
-}
+module.exports=expense;

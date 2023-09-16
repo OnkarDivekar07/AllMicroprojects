@@ -1,24 +1,23 @@
 //require  imports for sever
-const express=require('express');
+const express = require('express');
 const app = express();
-const db=require('./util/database');
+const path=require('path')
+const sequelize = require('./util/database');
+
 //routes file paths
-const deleteroute=require('./routes/deleteroute')
-const errorroute=require('./routes/errorroute')
-const getroute=require('./routes/getroute')
-const htmlrenderroute=require('./routes/htmlrenderroute')
-const postroute=require('./routes/postroute');
+const route = require('./routes/crudroutes');
 
-
+app.use(express.static(path.join(__dirname, 'view')));
 //crud routes
-app.use(htmlrenderroute);
 
-app.use(getroute);
+app.use(route);
 
-app.use(postroute);
+sequelize.sync()
+    .then((result) => {
 
-app.use(deleteroute);
+        app.listen(3000);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
 
-app.use(errorroute);
-
-app.listen(3000);
